@@ -40,14 +40,17 @@ exports.registerUser = async (req, res) => {
 exports.updateUserScore = async (req, res) => {
   try {
     const { username, score } = req.body;
+    console.log("Update score request received:", { username, score }); // Debug log
 
     const user = await User.findOne({ username });
     if (!user) {
+      console.log("User not found:", username); // Debug log
       return res.status(404).json({ message: 'User not found' });
     }
 
     user.gameBalance += score;
     await user.save();
+    console.log("User score updated successfully:", user); // Debug log
 
     res.status(200).json(user);
   } catch (error) {
@@ -55,6 +58,7 @@ exports.updateUserScore = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message || error });
   }
 };
+
 
 // Get user by username
 exports.getUserByUsername = async (req, res) => {
