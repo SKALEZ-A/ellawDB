@@ -5,23 +5,20 @@ const connectDB = require('./db/connect');
 require('dotenv').config();
 
 const app = express();
-const port = process.env.PORT || 3003;
 
 app.use(cors());
 app.use(express.json());
 
 app.use('/api/Cluster0', gameRoutes);
 
-app.get('/hello', (req, res) => {
-  res.send('WALL-E ON TON');
-});
-
 const start = async () => {
   try {
     await connectDB(process.env.MONGO_URI);
-    app.listen(port, () => console.log(`Server is listening on port ${port}....`));
+    app.listen(process.env.PORT || 3001, () =>
+      console.log(`Server is listening on port ${process.env.PORT || 3001}....`)
+    );
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 

@@ -35,6 +35,7 @@ exports.registerUser = async (req, res) => {
   }
 };
 
+
 exports.updateUserScore = async (req, res) => {
   try {
     const { username, score } = req.body;
