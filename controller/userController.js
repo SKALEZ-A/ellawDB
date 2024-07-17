@@ -87,10 +87,10 @@ exports.getInvitedUsers = async (req, res) => {
 };
 
 
-// Borrowed gpt functions...
+// Borrowed gptfunctions...
 
 // Get all users
-const getAllUsers = async (req, res) => {
+exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find({}, 'username'); // Fetch only the usernames
     res.status(200).json(users);
@@ -98,12 +98,4 @@ const getAllUsers = async (req, res) => {
     console.error('Error fetching all users:', error.message);
     res.status(500).json({ error: error.message });
   }
-};
-
-module.exports = {
-  // registerUser,
-  // updateUserScore,
-  // getUserByUsername,
-  // getInvitedUsers,
-  getAllUsers, // Export the new function
 };
