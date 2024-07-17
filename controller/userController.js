@@ -1,5 +1,6 @@
 const User = require('../models/user');
 
+// Register a new user
 exports.registerUser = async (req, res) => {
   try {
     const { userId, inviterUsername, username } = req.body;
@@ -10,7 +11,7 @@ exports.registerUser = async (req, res) => {
       return res.status(400).json({ message: 'User ID already exists' });
     }
 
-    // Create new user
+    // Create a new user
     const newUser = new User({
       userId,
       inviterUsername,
@@ -35,6 +36,7 @@ exports.registerUser = async (req, res) => {
   }
 };
 
+// Update user score
 exports.updateUserScore = async (req, res) => {
   try {
     const { username, score } = req.body;
@@ -54,6 +56,7 @@ exports.updateUserScore = async (req, res) => {
   }
 };
 
+// Get user by username
 exports.getUserByUsername = async (req, res) => {
   try {
     const { username } = req.params;
@@ -70,6 +73,7 @@ exports.getUserByUsername = async (req, res) => {
   }
 };
 
+// Get invited users
 exports.getInvitedUsers = async (req, res) => {
   try {
     const { username } = req.params;
@@ -85,9 +89,6 @@ exports.getInvitedUsers = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message || error });
   }
 };
-
-
-// Borrowed gptfunctions...
 
 // Get all users
 exports.getAllUsers = async (req, res) => {

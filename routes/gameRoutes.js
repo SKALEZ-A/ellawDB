@@ -15,9 +15,7 @@ router.get('/user/:username', getUserByUsername);
 // Get all referred users by inviter username
 router.get('/invites/:username', getInvitedUsers);
 
-// borrowed gpt functions
 // Get all users
 router.get('/users', getAllUsers);
 
 module.exports = router;
-
