@@ -1,5 +1,6 @@
 const User = require('../models/user');
 
+
 exports.registerUser = async (req, res) => {
   try {
     const { userId, inviterUsername, username } = req.body;
@@ -31,28 +32,6 @@ exports.registerUser = async (req, res) => {
     res.status(201).json(newUser);
   } catch (error) {
     console.error('Error registering user:', error);
-    res.status(500).json({ message: 'Server error', error: error.message || error });
-  }
-};
-
-exports.updateUserScore = async (req, res) => {
-  try {
-    const { username, score } = req.body;
-    console.log("Update score request received:", { username, score });
-
-    const user = await User.findOne({ username });
-    if (!user) {
-      console.log("User not found:", username);
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    user.gameBalance += score;
-    await user.save();
-    console.log("User score updated successfully:", user);
-
-    res.status(200).json(user);
-  } catch (error) {
-    console.error('Error updating user score:', error);
     res.status(500).json({ message: 'Server error', error: error.message || error });
   }
 };
@@ -91,6 +70,29 @@ exports.getInvitedUsers = async (req, res) => {
     res.status(200).json(inviter.invitedUsers);
   } catch (error) {
     console.error('Error getting invited users:', error);
+    res.status(500).json({ message: 'Server error', error: error.message || error });
+  }
+};
+
+
+exports.updateUserScore = async (req, res) => {
+  try {
+    const { username, score } = req.body;
+    console.log("Update score request received:", { username, score });
+
+    const user = await User.findOne({ username });
+    if (!user) {
+      console.log("User not found:", username);
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    user.gameBalance += score;
+    await user.save();
+    console.log("User score updated successfully:", user);
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error('Error updating user score:', error);
     res.status(500).json({ message: 'Server error', error: error.message || error });
   }
 };
