@@ -35,7 +35,6 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-
 exports.updateUserScore = async (req, res) => {
   try {
     const { username, score } = req.body;
@@ -104,5 +103,24 @@ exports.getAllUsers = async (req, res) => {
   } catch (error) {
     console.error('Error fetching all users:', error.message);
     res.status(500).json({ error: error.message });
+  }
+};
+
+exports.deleteUser = async (req, res) => {
+  try {
+    const { username } = req.params;
+    console.log("Delete user request received:", { username }); // Debug log
+
+    const user = await User.findOneAndDelete({ username });
+    if (!user) {
+      console.log("User not found:", username); // Debug log
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    console.log("User deleted successfully:", user); // Debug log
+    res.status(200).json({ message: 'User deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    res.status(500).json({ message: 'Server error', error: error.message || error });
   }
 };

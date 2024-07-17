@@ -1,5 +1,5 @@
 const express = require('express');
-const { registerUser, updateUserScore, getUserByUsername, getInvitedUsers, getAllUsers } = require('../controller/userController');
+const { registerUser, updateUserScore, getUserByUsername, getInvitedUsers, getAllUsers, deleteUser } = require('../controller/userController');
 
 const router = express.Router();
 
@@ -17,5 +17,8 @@ router.get('/invites/:username', getInvitedUsers);
 
 // Get all users
 router.get('/users', getAllUsers);
+
+// Delete user by username
+router.delete('/user/:username', deleteUser);
 
 module.exports = router;
