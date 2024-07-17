@@ -38,17 +38,17 @@ exports.registerUser = async (req, res) => {
 exports.updateUserScore = async (req, res) => {
   try {
     const { username, score } = req.body;
-    console.log("Update score request received:", { username, score }); // Debug log
+    console.log("Update score request received:", { username, score });
 
     const user = await User.findOne({ username });
     if (!user) {
-      console.log("User not found:", username); // Debug log
+      console.log("User not found:", username);
       return res.status(404).json({ message: 'User not found' });
     }
 
     user.gameBalance += score;
     await user.save();
-    console.log("User score updated successfully:", user); // Debug log
+    console.log("User score updated successfully:", user);
 
     res.status(200).json(user);
   } catch (error) {
@@ -60,13 +60,12 @@ exports.updateUserScore = async (req, res) => {
 exports.getUserByUsername = async (req, res) => {
   try {
     const { username } = req.params;
-    console.log("Fetching user by username:", username); // Debug log
+    console.log("Fetching user by username:", username);
 
     const user = await User.findOne({ username }).populate('invitedUsers');
     if (!user) {
-      console.log("User not found:", username); // Debug log
-      // Automatically register the user if not found
-      const newUser = new User({ username, userId: username }); // Assuming userId is the same as username
+      console.log("User not found:", username);
+      const newUser = new User({ username, userId: username });
       await newUser.save();
       return res.status(201).json(newUser);
     }
@@ -81,11 +80,11 @@ exports.getUserByUsername = async (req, res) => {
 exports.getInvitedUsers = async (req, res) => {
   try {
     const { username } = req.params;
-    console.log("Fetching invited users for username:", username); // Debug log
+    console.log("Fetching invited users for username:", username);
 
     const inviter = await User.findOne({ username }).populate('invitedUsers');
     if (!inviter) {
-      console.log("Inviter not found:", username); // Debug log
+      console.log("Inviter not found:", username);
       return res.status(404).json({ message: 'Inviter not found' });
     }
 
@@ -98,7 +97,7 @@ exports.getInvitedUsers = async (req, res) => {
 
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({}, 'username'); // Fetch only the usernames
+    const users = await User.find({}, 'username');
     res.status(200).json(users);
   } catch (error) {
     console.error('Error fetching all users:', error.message);
@@ -109,15 +108,15 @@ exports.getAllUsers = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   try {
     const { username } = req.params;
-    console.log("Delete user request received:", { username }); // Debug log
+    console.log("Delete user request received:", { username });
 
     const user = await User.findOneAndDelete({ username });
     if (!user) {
-      console.log("User not found:", username); // Debug log
+      console.log("User not found:", username);
       return res.status(404).json({ message: 'User not found' });
     }
 
-    console.log("User deleted successfully:", user); // Debug log
+    console.log("User deleted successfully:", user);
     res.status(200).json({ message: 'User deleted successfully' });
   } catch (error) {
     console.error('Error deleting user:', error);
