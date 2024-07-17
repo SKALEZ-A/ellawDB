@@ -1,6 +1,5 @@
 const User = require('../models/user');
 
-// Register a new user
 exports.registerUser = async (req, res) => {
   try {
     const { userId, inviterUsername, username } = req.body;
@@ -8,10 +7,10 @@ exports.registerUser = async (req, res) => {
     // Check if user already exists
     const existingUser = await User.findOne({ userId });
     if (existingUser) {
-      return res.status(400).json({ message: 'User ID already exists' });
+      return res.status(200).json(existingUser); // Return existing user if found
     }
 
-    // Create a new user
+    // Create new user
     const newUser = new User({
       userId,
       inviterUsername,
@@ -36,7 +35,6 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-// Update user score
 exports.updateUserScore = async (req, res) => {
   try {
     const { username, score } = req.body;
@@ -59,17 +57,18 @@ exports.updateUserScore = async (req, res) => {
   }
 };
 
-
-
-
-// Get user by username
 exports.getUserByUsername = async (req, res) => {
   try {
     const { username } = req.params;
+    console.log("Fetching user by username:", username); // Debug log
 
     const user = await User.findOne({ username }).populate('invitedUsers');
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      console.log("User not found:", username); // Debug log
+      // Automatically register the user if not found
+      const newUser = new User({ username, userId: username }); // Assuming userId is the same as username
+      await newUser.save();
+      return res.status(201).json(newUser);
     }
 
     res.status(200).json(user);
@@ -79,13 +78,14 @@ exports.getUserByUsername = async (req, res) => {
   }
 };
 
-// Get invited users
 exports.getInvitedUsers = async (req, res) => {
   try {
     const { username } = req.params;
+    console.log("Fetching invited users for username:", username); // Debug log
 
     const inviter = await User.findOne({ username }).populate('invitedUsers');
     if (!inviter) {
+      console.log("Inviter not found:", username); // Debug log
       return res.status(404).json({ message: 'Inviter not found' });
     }
 
@@ -96,7 +96,6 @@ exports.getInvitedUsers = async (req, res) => {
   }
 };
 
-// Get all users
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find({}, 'username'); // Fetch only the usernames
