@@ -1,7 +1,5 @@
 const User = require('../models/user');
 
-
-
 exports.registerUser = async (req, res) => {
   try {
     const { userId, inviterUsername, username } = req.body;
@@ -53,6 +51,7 @@ exports.getInvitedUsers = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message || error });
   }
 };
+
 
 exports.getUserByUsername = async (req, res) => {
   try {
