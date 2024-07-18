@@ -1,11 +1,10 @@
 const User = require('../models/user');
-const crypto = require('crypto');
 
 exports.registerUser = async (req, res) => {
   try {
-    const { userId, inviterCode, username } = req.body;
+    const { userId, inviterUsername, username } = req.body;
 
-    console.log(`Registering user: ${username} with inviter code: ${inviterCode}`); // Log for debugging
+    console.log(`Registering user: ${username} with inviter: ${inviterUsername}`); // Log for debugging
 
     const existingUser = await User.findOne({ userId });
     if (existingUser) {
@@ -14,19 +13,19 @@ exports.registerUser = async (req, res) => {
 
     const newUser = new User({
       userId,
+      inviterUsername,
       username,
-      referralCode: crypto.randomBytes(4).toString('hex'), // Generate a new referral code
     });
 
-    if (inviterCode) {
-      const inviter = await User.findOne({ referralCode: inviterCode });
+    if (inviterUsername) {
+      const inviter = await User.findOne({ username: inviterUsername });
       if (inviter) {
         inviter.referralBalance += 100;
         inviter.invitedUsers.push(newUser._id);
         await inviter.save();
-        console.log(`Updated inviter: ${inviter.username} with new invitee: ${username}`); // Log for debugging
+        console.log(`Updated inviter: ${inviterUsername} with new invitee: ${username}`); // Log for debugging
       } else {
-        console.log(`Inviter not found with code: ${inviterCode}`); // Log if inviter not found
+        console.log(`Inviter not found: ${inviterUsername}`); // Log if inviter not found
       }
     }
 
