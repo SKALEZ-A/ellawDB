@@ -22,3 +22,4 @@ router.get('/users', getAllUsers);
 router.delete('/user/:username', deleteUser);
 
 module.exports = router;
+
