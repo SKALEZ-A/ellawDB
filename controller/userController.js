@@ -2,9 +2,12 @@ const User = require('../models/user');
 
 const User = require('../models/user');
 
+
 exports.registerUser = async (req, res) => {
   try {
     const { userId, inviterUsername, username } = req.body;
+
+    console.log(`Registering user: ${username} with inviter: ${inviterUsername}`); // Log for debugging
 
     const existingUser = await User.findOne({ userId });
     if (existingUser) {
@@ -23,6 +26,9 @@ exports.registerUser = async (req, res) => {
         inviter.referralBalance += 100;
         inviter.invitedUsers.push(newUser._id);
         await inviter.save();
+        console.log(`Updated inviter: ${inviterUsername} with new invitee: ${username}`); // Log for debugging
+      } else {
+        console.log(`Inviter not found: ${inviterUsername}`); // Log if inviter not found
       }
     }
 
@@ -48,7 +54,6 @@ exports.getInvitedUsers = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message || error });
   }
 };
-
 
 exports.getUserByUsername = async (req, res) => {
   try {
