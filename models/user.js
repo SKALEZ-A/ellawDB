@@ -7,14 +7,19 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  inviterUsername: {
-    type: String,
-    required: false,
-  },
   username: {
     type: String,
     unique: true,
     required: true,
+  },
+  referralCode: {
+    type: String,
+    unique: true,
+    default: () => crypto.randomBytes(4).toString('hex'),
+  },
+  inviterCode: {
+    type: String,
+    required: false,
   },
   referralBalance: {
     type: Number,
@@ -32,12 +37,6 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-});
-
-// Middleware to sync gameBalance and score
-userSchema.pre('save', function(next) {
-  this.score = this.gameBalance + this.referralBalance;
-  next();
 });
 
 // Model
