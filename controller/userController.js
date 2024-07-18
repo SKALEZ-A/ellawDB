@@ -1,6 +1,5 @@
 const User = require('../models/user');
 
-
 exports.registerUser = async (req, res) => {
   try {
     const { userId, inviterUsername, username } = req.body;
@@ -39,14 +38,9 @@ exports.registerUser = async (req, res) => {
 exports.getUserByUsername = async (req, res) => {
   try {
     const { username } = req.params;
-    console.log("Fetching user by username:", username);
-
     const user = await User.findOne({ username }).populate('invitedUsers');
     if (!user) {
-      console.log("User not found:", username);
-      const newUser = new User({ username, userId: username });
-      await newUser.save();
-      return res.status(201).json(newUser);
+      return res.status(404).json({ message: 'User not found' });
     }
 
     res.status(200).json(user);
@@ -59,11 +53,8 @@ exports.getUserByUsername = async (req, res) => {
 exports.getInvitedUsers = async (req, res) => {
   try {
     const { username } = req.params;
-    console.log("Fetching invited users for username:", username);
-
     const inviter = await User.findOne({ username }).populate('invitedUsers');
     if (!inviter) {
-      console.log("Inviter not found:", username);
       return res.status(404).json({ message: 'Inviter not found' });
     }
 
@@ -73,6 +64,7 @@ exports.getInvitedUsers = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message || error });
   }
 };
+
 
 
 exports.updateUserScore = async (req, res) => {
